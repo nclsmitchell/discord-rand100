@@ -61,19 +61,26 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
           max = maxOption.value;
         }
       }
-      const randomNumber = Math.floor(Math.random() * max) + 1;
-      const formattedNumber = randomNumber < 10 ? `0${randomNumber}` : `${randomNumber}`;
+
+      let randomNumber;
+      if (max === 1) {
+        randomNumber = Math.floor(Math.random() * max);
+      }
+      else {
+        randomNumber = Math.floor(Math.random() * max) + 1;
+      }
 
       // Return a message with the random number if max is different from 100
       if (max !== 100) {
         return res.send({
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
-            content: `You rolled a ${formattedNumber} on a d${max}!`,
+            content: `You rolled a ${randomNumber} on a d${max}!`,
           },
         });
       }
 
+      const formattedNumber = randomNumber < 10 ? `0${randomNumber}` : `${randomNumber}`;
       let funMessage;
     
       // Check for critical success or failure
