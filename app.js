@@ -51,7 +51,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
     }
 
     // "rand" command
-    if (name === 'rand') {
+    if (name === 'rand' || name === 'roll') {
 
       // Check if the user provided a max value
       let max = 100; // Default value
