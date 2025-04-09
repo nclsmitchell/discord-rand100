@@ -36,7 +36,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
    * See https://discord.com/developers/docs/interactions/application-commands#slash-commands
    */
   if (type === InteractionType.APPLICATION_COMMAND) {
-    const { name } = data;
+    const { name, options } = data;
 
     // "test" command
     if (name === 'test') {
@@ -52,9 +52,28 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
 
     // "rand" command
     if (name === 'rand') {
-      const randomNumber = Math.floor(Math.random() * 100) + 1;
+
+      // Check if the user provided a max value
+      let max = 100; // Default value
+      if (options && options.length > 0) {
+        const maxOption = options.find(option => option.name === 'max');
+        if (maxOption && maxOption.value) {
+          max = maxOption.value;
+        }
+      }
+      const randomNumber = Math.floor(Math.random() * max) + 1;
       const formattedNumber = randomNumber < 10 ? `0${randomNumber}` : `${randomNumber}`;
-    
+
+      // Return a message with the random number if max is different from 100
+      if (max !== 100) {
+        return res.send({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: `You rolled a ${formattedNumber} on a d${max}!`,
+          },
+        });
+      }
+
       let funMessage;
     
       // Check for critical success or failure
@@ -82,23 +101,6 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         },
       });
     }
-
-    // Add rand 6, rand 20, etc. commands here that parse the number from the command name
-    if (name.startsWith('rand')) {
-      const number = parseInt(name.split(' ')[1], 10);
-
-      // Check if the number is valid
-      if (!isNaN(number)) {
-        const randomNumber = Math.floor(Math.random() * number) + 1;
-        return res.send({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            content: `You rolled a ${randomNumber} on a d${number}!`,
-          },
-        });
-      }
-    }
-
 
     console.error(`unknown command: ${name}`);
     return res.status(400).json({ error: 'unknown command' });
