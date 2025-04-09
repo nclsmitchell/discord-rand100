@@ -50,12 +50,14 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
       });
     }
 
+    // "rand" command
     if (name === 'rand') {
       const randomNumber = Math.floor(Math.random() * 100) + 1;
       const formattedNumber = randomNumber < 10 ? `0${randomNumber}` : `${randomNumber}`;
     
       let funMessage;
     
+      // Check for critical success or failure
       if (randomNumber <= 10) {
         funMessage = `🌟 Critical Success! Incredible, a mighty ${formattedNumber}! Fortune favors you today—expect miracles! ✨`;
       } else if (randomNumber >= 90) {
@@ -80,6 +82,23 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         },
       });
     }
+
+    // Add rand 6, rand 20, etc. commands here that parse the number from the command name
+    if (name.startsWith('rand')) {
+      const number = parseInt(name.split(' ')[1], 10);
+
+      // Check if the number is valid
+      if (!isNaN(number)) {
+        const randomNumber = Math.floor(Math.random() * number) + 1;
+        return res.send({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: `You rolled a ${randomNumber} on a d${number}!`,
+          },
+        });
+      }
+    }
+
 
     console.error(`unknown command: ${name}`);
     return res.status(400).json({ error: 'unknown command' });
