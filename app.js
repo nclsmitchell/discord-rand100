@@ -65,6 +65,12 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
       let randomNumber;
       if (max === 1) {
         randomNumber = Math.floor(Math.random() * max);
+        return res.send({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: `You tossed a coin and got ${randomNumber === 0 ? 'Heads' : 'Tails'}!`,
+          },
+        });
       }
       else {
         randomNumber = Math.floor(Math.random() * max) + 1;
