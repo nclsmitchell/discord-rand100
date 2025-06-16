@@ -4,7 +4,7 @@ import {
     InteractionType,
     verifyKey,
 } from 'discord-interactions';
-import { throwIfMissing } from 'src/utils.js';
+import { throwIfMissing } from './utils.js';
   
 
 export default async ({ req, res, error, log }) => {
