@@ -26,12 +26,10 @@ export default async ({ req, res, error, log }) => {
         return res.json({ error: 'Invalid request signature' }, 401);
     }
 
-    log('Valid request');
-
     const interaction = req.body;
-    const { type, data } = interaction;
+    log(`Received interaction: ${JSON.stringify(interaction)}`);
 
-    log(`Received interaction of type: ${type}`);
+    const { type, data } = interaction;
 
     if (type === InteractionType.PING) {
         return res.json({ type: InteractionResponseType.PONG}, 200);
