@@ -13,6 +13,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 // To keep track of our active games
 
+app.get('/health', (_, res) => {
+    res.send('Hello, world! This is a Discord bot server.');
+  }
+);
+
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
  * Parse request body and verifies incoming requests using discord-interactions package
