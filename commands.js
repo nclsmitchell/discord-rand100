@@ -49,4 +49,4 @@ const ROLL_COMMAND = {
 
 const ALL_COMMANDS = [TEST_COMMAND, RAND_COMMAND, ROLL_COMMAND];
 
-InstallGlobalCommands(process.env.APP_ID, ALL_COMMANDS);
+InstallGlobalCommands(process.env.DISCORD_APPLICATION_ID, ALL_COMMANDS);
